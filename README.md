@@ -1,4 +1,4 @@
-# Face Recognition - Docker image
+# Face Recognition - Docker image1
 
 This project provides a docker image which offers a web service to recognize known faces on images. It's based on the great [ageitgey/face_recognition](https://github.com/ageitgey/face_recognition) project and just add a web service using the Python `face_recognition`-library.
 
