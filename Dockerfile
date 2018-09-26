@@ -54,7 +54,7 @@ RUN cd /opt && \
     mkdir -p run && \
 
 # Copy web service script
-COPY run_alway.py /root/run_always.py
+COPY run_always.py /root/run_always.py
 
 EXPOSE 8080
 EXPOSE 8081
