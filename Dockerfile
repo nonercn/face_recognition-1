@@ -51,7 +51,7 @@ RUN cd ~ && \
 
 RUN cd /opt && \
     mkdir -p face && \
-    mkdir -p run && \
+    mkdir -p run
 
 # Copy web service script
 COPY run_always.py /root/run_always.py
