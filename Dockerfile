@@ -23,6 +23,8 @@ RUN apt-get -y update && \
     python3-numpy \
     software-properties-common \
     zip \
+    lrzsz \
+    vim \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
 
@@ -47,11 +49,26 @@ RUN cd ~ && \
     pip3 install -r requirements.txt && \
     python3 setup.py install
 
+RUN cd /opt && \
+    mkdir -p face && \
+    mkdir -p run && \
 
 # Copy web service script
-COPY facerec_service.py /root/facerec_service.py
+COPY run_alway.py /root/run_always.py
 
+EXPOSE 8080
+EXPOSE 8081
+EXPOSE 8082
+EXPOSE 8083
+EXPOSE 8084
+EXPOSE 8085
+EXPOSE 8086
+EXPOSE 8087
+EXPOSE 8088
+EXPOSE 8089
+EXPOSE 8888
+EXPOSE 22
 
 # Start the web service
 CMD cd /root/ && \
-    python3 facerec_service.py
+    python3 run_always.py
