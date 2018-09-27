@@ -15,7 +15,7 @@ CORS(app)
 
 
 # distance
-def image_distance(known_face_encoding,unkown_face_encoding):
+def image_distance(known_face_encoding):
     return face_recognition.face_distance([known_face_encoding], unkown_face_encoding)[0]
 
 
@@ -28,12 +28,14 @@ def back_func_err_distance(values):
     print(values)
 
 
-def process_pool_distance(known_face_encodings,unkown_face_encoding):
+def process_pool_distance(known_face_encodings):
     pool = multiprocessing.Pool(processes=None)
-    for known_face_encoding in known_face_encodings:
-    	pool.apply_async(func=image_distance, args=(known_face_encoding,unkown_face_encoding), callback=back_func_distance)
+    pool.map_async(image_distance, (known_face_encoding for known_face_encoding in known_face_encodings), callback=back_func_distance,
+                   error_callback=back_func_err_distance)
+
     pool.close()
     pool.join()
+    print(result_distance)
     return result_distance
 
 
@@ -111,11 +113,12 @@ def web_run():
 @app.route('/distance', methods=['POST'])
 def web_distance():
     print("distance")
+    global unkown_face_encoding
     unkown_face_encoding = request.form.get('unkown')
     unkown_face_encoding = np.array(json.loads(unkown_face_encoding))
     known_face_encodings = request.form.get('kowns')
     known_face_encodings = np.array(json.loads(known_face_encodings))
-    return json.dumps(process_pool_distance(known_face_encodings,unkown_face_encoding))
+    return json.dumps(process_pool_distance(known_face_encodings))
 
 
 if __name__ == "__main__":
