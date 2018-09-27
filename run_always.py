@@ -110,7 +110,7 @@ def web_run():
 
 
 @app.route('/distance', methods=['POST'])
-def web_encode():
+def web_distance():
     print("distance")
     global unkown_face_encoding
     unkown_face_encoding = request.form.get('unkown')
