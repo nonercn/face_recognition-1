@@ -40,7 +40,6 @@ RUN cd ~ && \
 RUN cd ~ && \
     pip3 install flask flask-cors
 
-
 # Install Face-Recognition Python Library
 RUN cd ~ && \
     mkdir -p face_recognition && \
@@ -56,18 +55,8 @@ RUN cd /opt && \
 # Copy web service script
 COPY run_always.py /root/run_always.py
 
-EXPOSE 8080
-EXPOSE 8081
-EXPOSE 8082
-EXPOSE 8083
-EXPOSE 8084
-EXPOSE 8085
-EXPOSE 8086
-EXPOSE 8087
-EXPOSE 8088
-EXPOSE 8089
 EXPOSE 8888
-EXPOSE 22
+EXPOSE 8887
 
 # Start the web service
 CMD cd /root/ && \

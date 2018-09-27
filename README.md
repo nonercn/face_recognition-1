@@ -1,46 +1,80 @@
-# Face Recognition - Docker image1
+### 使用
+#### 端口
+~~~
+8888 正式服务端口
+8887 开发测试端口
+~~~
 
-This project provides a docker image which offers a web service to recognize known faces on images. It's based on the great [ageitgey/face_recognition](https://github.com/ageitgey/face_recognition) project and just add a web service using the Python `face_recognition`-library.
+#### 方法
+> /encode GET
+~~~
+作用: 扫描并解析 /opt/face 目录下人脸
+参数: 无
+返回值: 人脸对象数组 
+    eg. [{"name":"李三","encode":[1,2,3,4,5,6...]},"name":"王二","encode":[]]
+~~~
+> /encode POST
+~~~
+作用: 解析 传入 人脸
+参数: file 未知人脸 图片
+返回值: 人脸对象 
+~~~
 
-## Get started
+> /distance POST
+~~~
+作用: 从kowns 获得与 unkown 的对比值
+参数: unkown 未知人脸 encode 码
+      kowns 已知人脸 encode 码 数组
+返回值: 对比值数组
+~~~
 
-### Build the Docker image
+### 打包
+> 推荐 daoCloud 云打包 (由于网络原因)
 
-Start by building the docker image with a defined name. This can take a while.
+https://dashboard.daocloud.io
 
-```bash
-docker build -t facerec_service .
-```
+### 离线部署
+#### 下载
+> 拉取 daoCloud 打好的镜像
+~~~
+docker pull xx
+~~~
+> 保存离线镜像
+~~~
+docker save -o xx.docker xx
+~~~
+> 下载离线docker
 
-### Run the Docker image
+~~~
+curl -L https://github.com/wyp0596/docker-installer/releases/download/v1.1.0/RPM-based.tar.gz > RPM-based.tar.gz
+~~~
+#### 部署
+> 安装离线docker
+~~~
+tar -xzf RPM-based.tar.gz 
+cd RPM-based/docker
+sudo sh install.sh
+~~~
+> 加载离线镜像
+~~~
+docker load -i xx.docker
+~~~
+> 运行离线镜像
+~~~
+docker run -d -p 8888:8888 -p 8887:8887 --name face -v /本机人脸路径:/opt/face xx
+~~~
 
-Start the image and forward port 8080. Optionally bind a local directory to `/root/faces` to provide a location for predefined images which will be registered at start time.
-
-```bash
-docker run -d -p8080:8080 -vfaces:/root/faces facerec_service
-```
-
-## Features
-
-### Register known faces
-
-Simple `POST` an image-file to the `/faces` endpoint and provide an identifier.
-`curl -X POST -F "file=@person1.jpg" http://localhost:8080/faces?id=person1`
-
-### Read registered faces
-
-Simple `GET` the `/register` endpoint.
-`curl http://localhost:8080/faces`
-
-### Identify faces on image
-
-Simple `POST` an image-file to the web service.
-`curl -X POST -F "file=@person1.jpg" http://localhost:8080/`
-
-## Examples
-
-In the `examples`-directory there is currently only one example that shows how to use the Raspberry Pi-Camera module to capture an image and `POST` it to the `Face Recognition - Docker image` to check for known faces.
-
-## Notes
-
-I'm not a Python expert, so I'm pretty sure you can optimize the Python code further :) Please feel free to send PR's or open issues.
+#### 开发测试
+> 挂载 测试代码
+~~~
+docker run -d -p 8888:8888 -p 8887:8887 --name face -v /本机人脸路径:/opt/face -v /本机测试代码:/opt/run xx
+~~~
+> 进入容器
+~~~
+docker exec -it xx bash
+cd /opt/run
+~~~
+> 启动测试代码
+~~~
+python xxx.py
+~~~
